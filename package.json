@@ -1,0 +1,22 @@
+{
+  "name": "api-gateway",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node src/app.js"
+  },
+  "dependencies": {
+    "axios": "^0.27.2",
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "dotenv": "^16.0.1",
+    "express": "~4.16.1",
+    "mongoose": "^6.3.8",
+    "morgan": "~1.9.1",
+    "node-fetch": "^3.2.6",
+    "promises": "^0.2.5"
+  },
+  "devDependencies": {
+    "@types/node-fetch": "^2.6.2"
+  }
+}
