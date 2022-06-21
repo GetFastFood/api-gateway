@@ -1,19 +1,24 @@
 const router = require('express').Router();
 const axios = require('axios');
+const handlerArticle = require('../utils/handler.Article');
+const handlerMenu = require('../utils/handler.Menu');
+const handlerRestaurant = require('../utils/handler.Restaurant');
+
 
 router.get('/restaurant/:id', async(req, res) => {
 
     try{
         const menuArray = [];
         const articleArray = [];
-        const restaurantPromise = axios.get(`${process.env.API_URL_RESTAURANT}`+ req.params.id);
+
+        const restaurantPromise = axios.get(`${handlerRestaurant()}` + req.params.id);
     
         const restaurantResponse = await restaurantPromise;
         const restaurantJson = await restaurantResponse.data;
     
         for (let i = 0; i < restaurantResponse.data.menus.length; i++) {
             const menuId = restaurantResponse.data.menus[i]._id;
-            const menuPromise = axios.get(`${process.env.API_URL_MENU}` + menuId);
+            const menuPromise = axios.get(`${handlerMenu()}` + menuId);
     
             const menuResponse = await menuPromise;
             const menuJson = await menuResponse.data;
@@ -23,7 +28,7 @@ router.get('/restaurant/:id', async(req, res) => {
     
         for(let i = 0; i < restaurantResponse.data.article.length; i++){
             const articleId = restaurantResponse.data.article[i]._id;
-            const articlePromise = axios.get(`${process.env.API_URL_ARTICLE}` + articleId);
+            const articlePromise = axios.get(`${handlerArticle()}` + articleId);
             const articleResponse = await articlePromise;
             const articleJson = await articleResponse.data;
     
@@ -40,7 +45,7 @@ router.get('/restaurant/:id', async(req, res) => {
 
 // GET /api/v1/restaurant
 router.get('/restaurant', function(req, res) {
-    axios.get(`${process.env.API_URL_RESTAURANT}`).then(function(response){
+    axios.get(`${handlerRestaurant()}`).then(function(response){
         res.json(response.data);
         return response.data;
     }).catch(function(err){
@@ -50,7 +55,7 @@ router.get('/restaurant', function(req, res) {
 
 // POST /api/v1/restaurant
 router.post('/restaurant', function(req, res) {
-    axios.post(`${process.env.API_URL_RESTAURANT}`, req.body).then(function(response){
+    axios.post(`${handlerRestaurant()}`, req.body).then(function(response){
         res.json(response.data);
         return response.data;
     }).catch(function(err){
@@ -60,7 +65,7 @@ router.post('/restaurant', function(req, res) {
 
 // PUT /api/v1/restaurant/:id
 router.put('/restaurant/:id', function(req, res) {
-    axios.put(`${process.env.API_URL_RESTAURANT}`+ req.params.id, req.body).then(function(response){
+    axios.put(`${handlerRestaurant()}`+ req.params.id, req.body).then(function(response){
         res.json(response.data);
         return response.data;
     }).catch(function(err){
@@ -70,7 +75,7 @@ router.put('/restaurant/:id', function(req, res) {
 
 // DELETE /api/v1/restaurant/:id
 router.delete('/restaurant/:id', function(req, res) {
-    axios.delete(`${process.env.API_URL_RESTAURANT}`+ req.params.id).then(function(response){
+    axios.delete(`${handlerRestaurant()}`+ req.params.id).then(function(response){
         res.json(response.data);
         return response.data;
     }).catch(function(err){
