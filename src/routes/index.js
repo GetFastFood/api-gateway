@@ -1,5 +1,7 @@
 const router = require('express').Router();
 const axios = require('axios');
+const jwt = require('jsonwebtoken');
+const { checkTokenMiddleware, extractBearerToken } = require('../middleware/auth');
 const handlerArticle = require('../utils/handler.Article');
 const handlerMenu = require('../utils/handler.Menu');
 const handlerRestaurant = require('../utils/handler.Restaurant');
@@ -44,7 +46,14 @@ router.get('/restaurant/:id', async(req, res) => {
 });
 
 // GET /api/v1/restaurant
-router.get('/restaurant', function(req, res) {
+router.get('/restaurant', checkTokenMiddleware, function(req, res) {
+    // Récupération du token
+    const token = req.headers.authorization && extractBearerToken(req.headers.authorization)
+    // Décodage du token
+    const decoded = jwt.decode(token, { complete: false })
+
+    console.log(decoded);
+
     axios.get(`${handlerRestaurant()}`).then(function(response){
         res.json(response.data);
         return response.data;
