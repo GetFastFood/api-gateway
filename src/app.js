@@ -11,6 +11,7 @@ var articleRouter = require('./routes/article');
 var menuRouter = require('./routes/menu');
 var orderRouter = require('./routes/order');
 var usersRouter = require('./routes/users');
+var serviceRouter = require('./routes/service');
 
 var app = express();
 
@@ -26,6 +27,7 @@ app.use(`${process.env.API_ARTICLE}`, articleRouter);
 app.use(`${process.env.API_MENU}`, menuRouter);
 app.use(`${process.env.API_ORDER}`, orderRouter);
 app.use(`${process.env.API_USERS}`, usersRouter);
+app.use(`${process.env.API_SERVICE}`, serviceRouter);
 
 app.listen(process.env.PORT, () => console.log('Server app listening on port ' + process.env.PORT));
 

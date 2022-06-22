@@ -3,6 +3,7 @@ const axios = require('axios');
 const jwt = require('jsonwebtoken');
 const { checkTokenMiddleware, extractBearerToken } = require('../middleware/auth');
 const handlerUser = require('../utils/handler.User');
+const logs = require('../utils/logs.utils');
 
 const users  = [];
 
@@ -19,6 +20,7 @@ router.post('/login', async (req, res) => {
     const user = users.find(user => user.email === req.body.email && user.password === req.body.password);
 
     if (!user) {
+        logs.info("User : " + req.body.email + " tried to connect from " + req.ip);
         return res.status(400).json({ message: 'Error. Wrong email or password' })
     }
 
@@ -34,6 +36,7 @@ router.post('/login', async (req, res) => {
         role: user.role
     }, process.env.SECRET_REFRESH_TOKEN, { expiresIn: '7d'})
 
+    logs.info('User : ' + req.body.email + ' connected, from IP : ' + req.ip + ' with role: ' + user.role);
     return res.json({ access_token: token, refresh_token: refreshToken })
 
     } catch (error) {
