@@ -7,6 +7,10 @@ var logger = require('morgan');
 
 var router = require('./routes/index');
 var loginRouter = require('./routes/auth');
+var articleRouter = require('./routes/article');
+var menuRouter = require('./routes/menu');
+var orderRouter = require('./routes/order');
+var usersRouter = require('./routes/users');
 
 var app = express();
 
@@ -17,7 +21,11 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(`${process.env.API_URL}`, router);
-app.use(`${process.env.API_URL_LOGIN}`, loginRouter);
+app.use(`${process.env.API_LOGIN}`, loginRouter);
+app.use(`${process.env.API_ARTICLE}`, articleRouter);
+app.use(`${process.env.API_MENU}`, menuRouter);
+app.use(`${process.env.API_ORDER}`, orderRouter);
+app.use(`${process.env.API_USERS}`, usersRouter);
 
 app.listen(process.env.PORT, () => console.log('Server app listening on port ' + process.env.PORT));
 
