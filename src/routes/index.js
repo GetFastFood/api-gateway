@@ -46,13 +46,12 @@ router.get('/restaurant/:id', async(req, res) => {
 });
 
 // GET /api/v1/restaurant
-router.get('/restaurant', checkTokenMiddleware, function(req, res) {
+router.get('/restaurant', /*checkTokenMiddleware,*/ function(req, res) {
     // Récupération du token
-    const token = req.headers.authorization && extractBearerToken(req.headers.authorization)
+    // const token = req.headers.authorization && extractBearerToken(req.headers.authorization)
     // Décodage du token
-    const decoded = jwt.decode(token, { complete: false })
-
-    console.log(decoded);
+    //const decoded = jwt.decode(token, { complete: false })
+    //console.log(decoded);
 
     axios.get(`${handlerRestaurant()}`).then(function(response){
         res.json(response.data);
