@@ -61,6 +61,16 @@ router.get('/restaurant', /*checkTokenMiddleware,*/ function(req, res) {
     });
 });
 
+router.get('/restaurant/owner/:id', function(req, res) {
+    axios.get(`${handlerRestaurant()}` +`owner/`+ req.params.id).then(function(response){
+        res.json(response.data);
+        return response.data;
+    }).catch(function(err){
+        console.log(err);
+        res.status(500).json({ message: 'Error. Internal server error' });
+    });
+});
+
 // POST /api/v1/restaurant
 router.post('/restaurant', function(req, res) {
     axios.post(`${handlerRestaurant()}`, req.body).then(function(response){
