@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const axios = require('axios');
 const jwt = require('jsonwebtoken');
+const handlerArticle = require('../utils/handler.Article');
 const handlerOrder = require('../utils/handler.Order');
 
 // GET /api/v1/order
@@ -48,14 +49,34 @@ router.get('/delivery/:id', function(req, res) {
 });
 
 // GET /api/v1/order/restaurant/:id
-router.get('/restaurant/:id', function(req, res) {
-    axios.get(`${handlerOrder()}` +`restaurant/`+ req.params.id).then(function(response){
-        res.json(response.data);
-        return response.data;
-    }).catch(function(err){
+router.get('/restaurant/:id', async (req, res) => {
+
+    try{
+        const articleArray = [];
+        const restaurantOrderArray = [];
+
+        const orderRestaurantPromise = axios.get(`${handlerOrder()}` +`restaurant/`+ req.params.id);
+        const orderRestaurantResponse = await orderRestaurantPromise;
+        const restaurantJson = await orderRestaurantResponse.data;
+        restaurantOrderArray.push(restaurantJson);
+
+        for(let i = 0; i < restaurantJson.length; i++){
+            for(let j = 0; j < restaurantJson[i].article.length; j++){
+                const created = restaurantJson[i].created;
+                const articlePromise = axios.get(`${handlerArticle()}` + restaurantJson[i].article[j]._id);
+                const articleResponse = await articlePromise;
+                const articleJson = await articleResponse.data;
+                articleJson.created = created;
+                articleArray.push(articleJson);
+            }
+        }
+        
+        res.json({restaurant: restaurantJson, article: articleArray});
+
+    }catch(err){
         console.log(err);
         res.status(500).json({ message: 'Error. Internal server error' });
-    });
+    }
 });
 
 // POST /api/v1/order
