@@ -37,7 +37,7 @@ router.post('/login', async (req, res) => {
     }, process.env.SECRET_REFRESH_TOKEN, { expiresIn: '7d'})
 
     logs.info('User : ' + req.body.email + ' connected, from IP : ' + req.ip + ' with role: ' + user.role);
-    return res.json({ access_token: token, refresh_token: refreshToken })
+    return res.json({ access_token: token, refresh_token: refreshToken, role: user.role, id: user.ID, email: user.email });
 
     } catch (error) {
         console.log(error);
