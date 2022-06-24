@@ -14,11 +14,16 @@ router.post('/login', async (req, res) => {
 
     await verificationDb();
 
+
     if (!req.body.email || !req.body.password) {
         return res.status(400).json({ message: 'Error. Please enter the correct email and password' })
     }
 
     const user = users.find(user => user.email === req.body.email)
+
+    if(!user){
+        return res.status(400).json({ message: 'User is not present or delete !' })
+    }
 
     const decryptpassword = decrypt(user.password, "YFpoGQ@$VrUMf64tZ9eg^RiaQSZ^Pw%*");
 
