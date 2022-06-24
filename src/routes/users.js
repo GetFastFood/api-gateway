@@ -3,6 +3,7 @@ const axios = require('axios');
 const jwt = require('jsonwebtoken');
 const { encrypt } = require('../utils/aesEncryption');
 const handlerUser = require('../utils/handler.User');
+const { deleteUserArray } = require('./auth');
 
 // GET /api/v1/users
 router.get('/', function(req, res) {
@@ -55,6 +56,8 @@ router.put('/:id', function(req, res) {
 
 // DELETE /api/v1/users/:id
 router.delete('/:id', function(req, res) {
+    deleteUserArray(req.params.id);
+    
     axios.delete(`${handlerUser()}` + req.params.id).then(function(response){
         res.json(response.data);
         return response.data;

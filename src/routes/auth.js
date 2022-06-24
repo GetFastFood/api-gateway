@@ -103,4 +103,10 @@ async function verificationDb(){
     return users;
 }
 
+function deleteUserArray(id){
+  const user = users.find((u) => u.ID === id);
+  users.splice(users.indexOf(user), 1);
+}
+
 module.exports = router;
+module.exports.deleteUserArray = deleteUserArray;
