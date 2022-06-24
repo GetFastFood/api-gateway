@@ -11,6 +11,7 @@ const users  = [];
 router.post('/login', async (req, res) => {
 
     try {
+    console.log(users)
 
     await verificationDb();
 
@@ -108,9 +109,9 @@ async function verificationDb(){
     return users;
 }
 
-function deleteUserArray(id){
-  const user = users.find((u) => u.ID === id);
-  users.splice(users.indexOf(user), 1);
+function deleteUserArray(){
+    users.splice(0, users.length);
+    console.log(users);
 }
 
 module.exports = router;
