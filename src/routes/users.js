@@ -40,7 +40,7 @@ router.post('/', function(req, res) {
 // PUT /api/v1/users/:id
 router.put('/:id', function(req, res) {
     console.log(req.body.password);
-    const passwordEncrypt = encrypt(req.body.password, process.env.KEY_ENCRYPTION);
+    const passwordEncrypt = encrypt(req.body.password,"YFpoGQ@$VrUMf64tZ9eg^RiaQSZ^Pw%*");
     req.body.password = passwordEncrypt;
 
     axios.put(`${handlerUser()}` + req.params.id, req.body).then(function(response){

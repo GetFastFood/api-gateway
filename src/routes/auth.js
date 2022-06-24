@@ -20,7 +20,7 @@ router.post('/login', async (req, res) => {
 
     const user = users.find(user => user.email === req.body.email)
 
-    const decryptpassword = decrypt(user.password, process.env.KEY_ENCRYPTION);
+    const decryptpassword = decrypt(user.password, "YFpoGQ@$VrUMf64tZ9eg^RiaQSZ^Pw%*");
 
     if (!user || decryptpassword !== req.body.password) {
         logs.info("User : " + req.body.email + " tried to connect from " + req.ip);
@@ -77,7 +77,7 @@ router.post("/register", async (req, res) => {
         .json({ message: `Error. Email ${req.body.email} already existing` });
     }
     
-    const encryptPassword = await encrypt(req.body.password, process.env.KEY_ENCRYPTION);
+    const encryptPassword = await encrypt(req.body.password, "YFpoGQ@$VrUMf64tZ9eg^RiaQSZ^Pw%*");
     req.body.password = encryptPassword;
     const bodyJson = JSON.stringify(req.body);
     console.log(bodyJson);
