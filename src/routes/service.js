@@ -21,15 +21,15 @@ router.post('/mail', function(req, res){
         secure: false,
         auth: {
             user: 'notifications@greenbee44.fr', // generated ethereal user
-            pass: `${process.env.EMAIL_PASSWORD}`  // generated ethereal password
+            pass: '!jG8NMk&cP6Smq$e'  // generated ethereal password
         }
       });
 
         // setup email data with unicode symbols
   let mailOptions = {
-    from: '"GETFAST NOTIFICATIONS NO REPLY" <notifications@greenbee44.fr>', // sender address
-    to: req.body.to, // list of receivers
-    subject: 'GETFAST NOTIFICATIONS', // Subject line
+    from: '"Nodemailer Contact" <notifications@greenbee44.fr>', // sender address
+    to: "victor.massotte@viacesi.fr", // list of receivers
+    subject: 'Node Contact Request', // Subject line
     text: 'Hello world?', // plain text body
     html: output // html body
     };

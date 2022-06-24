@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const axios = require('axios');
 const jwt = require('jsonwebtoken');
+const { encrypt } = require('../utils/aesEncryption');
 const handlerUser = require('../utils/handler.User');
 
 // GET /api/v1/users
@@ -38,6 +39,10 @@ router.post('/', function(req, res) {
 
 // PUT /api/v1/users/:id
 router.put('/:id', function(req, res) {
+    console.log(req.body.password);
+    const passwordEncrypt = encrypt(req.body.password, process.env.KEY_ENCRYPTION);
+    req.body.password = passwordEncrypt;
+
     axios.put(`${handlerUser()}` + req.params.id, req.body).then(function(response){
         res.json(response.data);
         return response.data;

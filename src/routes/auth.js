@@ -2,6 +2,7 @@ const router = require('express').Router();
 const axios = require('axios');
 const jwt = require('jsonwebtoken');
 const { checkTokenMiddleware, extractBearerToken } = require('../middleware/auth');
+const { encrypt, decrypt } = require('../utils/aesEncryption');
 const handlerUser = require('../utils/handler.User');
 const logs = require('../utils/logs.utils');
 
@@ -17,9 +18,11 @@ router.post('/login', async (req, res) => {
         return res.status(400).json({ message: 'Error. Please enter the correct email and password' })
     }
 
-    const user = users.find(user => user.email === req.body.email && user.password === req.body.password);
+    const user = users.find(user => user.email === req.body.email)
 
-    if (!user) {
+    const decryptpassword = decrypt(user.password, process.env.KEY_ENCRYPTION);
+
+    if (!user || decryptpassword !== req.body.password) {
         logs.info("User : " + req.body.email + " tried to connect from " + req.ip);
         return res.status(400).json({ message: 'Error. Wrong email or password' })
     }
@@ -73,7 +76,9 @@ router.post("/register", async (req, res) => {
         .status(400)
         .json({ message: `Error. Email ${req.body.email} already existing` });
     }
-
+    
+    const encryptPassword = await encrypt(req.body.password, process.env.KEY_ENCRYPTION);
+    req.body.password = encryptPassword;
     const bodyJson = JSON.stringify(req.body);
     console.log(bodyJson);
     // Insertion dans le tableau des utilisateurs
