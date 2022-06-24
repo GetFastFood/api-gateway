@@ -28,6 +28,8 @@ router.get('/:id', function(req, res) {
 
 // POST /api/v1/users/
 router.post('/', function(req, res) {
+    const passwordEncrypt = encrypt(req.body.password,"YFpoGQ@$VrUMf64tZ9eg^RiaQSZ^Pw%*");
+    req.body.password = passwordEncrypt;
     axios.post(`${handlerUser()}`, req.body).then(function(response){
         res.json(response.data);
         return response.data;
@@ -39,7 +41,6 @@ router.post('/', function(req, res) {
 
 // PUT /api/v1/users/:id
 router.put('/:id', function(req, res) {
-    console.log(req.body.password);
     const passwordEncrypt = encrypt(req.body.password,"YFpoGQ@$VrUMf64tZ9eg^RiaQSZ^Pw%*");
     req.body.password = passwordEncrypt;
 
