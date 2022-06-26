@@ -1,10 +1,10 @@
 const router = require('express').Router();
 const axios = require('axios');
-const jwt = require('jsonwebtoken');
-const { checkTokenMiddleware, extractBearerToken } = require('../middleware/auth');
+const { checkTokenMiddleware } = require('../middleware/auth');
 const handlerArticle = require('../utils/handler.Article');
 const handlerMenu = require('../utils/handler.Menu');
 const handlerRestaurant = require('../utils/handler.Restaurant');
+const tokenReceiver = require('../utils/tokenReceiver');
 
 
 router.get('/restaurant/:id', async(req, res) => {
@@ -46,18 +46,15 @@ router.get('/restaurant/:id', async(req, res) => {
 });
 
 // GET /api/v1/restaurant
-router.get('/restaurant', /*checkTokenMiddleware,*/ function(req, res) {
-    // Récupération du token
-    // const token = req.headers.authorization && extractBearerToken(req.headers.authorization)
-    // Décodage du token
-    //const decoded = jwt.decode(token, { complete: false })
-    //console.log(decoded);
-
-    axios.get(`${handlerRestaurant()}`).then(function(response){
-        res.json(response.data);
-        return response.data;
-    }).catch(function(err){
-        console.log(err);
+router.get("/restaurant", function (req, res) {
+  axios
+    .get(`${handlerRestaurant()}`)
+    .then(function (response) {
+      res.json(response.data);
+      return response.data;
+    })
+    .catch(function (err) {
+      console.log(err);
     });
 });
 
@@ -72,33 +69,53 @@ router.get('/restaurant/owner/:id', function(req, res) {
 });
 
 // POST /api/v1/restaurant
-router.post('/restaurant', function(req, res) {
-    axios.post(`${handlerRestaurant()}`, req.body).then(function(response){
-        res.json(response.data);
-        return response.data;
-    }).catch(function(err){
-        console.log(err);
-    });
+router.post('/restaurant', checkTokenMiddleware, function(req, res) {
+    
+    const tokenLoad = tokenReceiver(req);
+
+    if(tokenLoad.role === 'role_technique' || tokenLoad.role === 'role_restaurateur' || tokenLoad.role === 'role_commercial'){
+        axios.post(`${handlerRestaurant()}`, req.body).then(function(response){
+            res.json(response.data);
+            return response.data;
+        }).catch(function(err){
+            console.log(err);
+        });
+    }else{
+        res.status(403).json({ message: 'Error. Forbidden' });
+    }
 });
 
 // PUT /api/v1/restaurant/:id
-router.put('/restaurant/:id', function(req, res) {
-    axios.put(`${handlerRestaurant()}`+ req.params.id, req.body).then(function(response){
-        res.json(response.data);
-        return response.data;
-    }).catch(function(err){
-        console.log(err);
-    });
+router.put('/restaurant/:id', checkTokenMiddleware, function(req, res) {
+
+    const tokenLoad = tokenReceiver(req);
+
+    if(tokenLoad.role === 'role_technique' || tokenLoad.role === 'role_restaurateur' || tokenLoad.role === 'role_commercial'){
+        axios.put(`${handlerRestaurant()}`+ req.params.id, req.body).then(function(response){
+            res.json(response.data);
+            return response.data;
+        }).catch(function(err){
+            console.log(err);
+        });
+    }else{
+        res.status(403).json({ message: 'Error. Forbidden' });
+    }
 });
 
 // DELETE /api/v1/restaurant/:id
-router.delete('/restaurant/:id', function(req, res) {
-    axios.delete(`${handlerRestaurant()}`+ req.params.id).then(function(response){
-        res.json(response.data);
-        return response.data;
-    }).catch(function(err){
-        console.log(err);
-    });
+router.delete('/restaurant/:id', checkTokenMiddleware, function(req, res) {
+    const tokenLoad = tokenReceiver(req);
+
+    if(tokenLoad.role === 'role_technique' || tokenLoad.role === 'role_restaurateur' || tokenLoad.role === 'role_commercial'){
+        axios.delete(`${handlerRestaurant()}`+ req.params.id).then(function(response){
+            res.json(response.data);
+            return response.data;
+        }).catch(function(err){
+            console.log(err);
+        });
+    }else{
+        res.status(403).json({ message: 'Error. Forbidden' });
+    }
 });
 
 module.exports = router;

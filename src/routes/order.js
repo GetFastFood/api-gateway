@@ -1,11 +1,12 @@
 const router = require('express').Router();
 const axios = require('axios');
-const jwt = require('jsonwebtoken');
 const handlerArticle = require('../utils/handler.Article');
 const handlerOrder = require('../utils/handler.Order');
+const { checkTokenMiddleware } = require('../middleware/auth');
+const tokenReceiver = require('../utils/tokenReceiver');
 
 // GET /api/v1/order
-router.get('/', function(req, res) {
+router.get('/', checkTokenMiddleware, function(req, res) {
     axios.get(`${handlerOrder()}`).then(function(response){
         res.json(response.data);
         return response.data;
@@ -16,7 +17,7 @@ router.get('/', function(req, res) {
 });
 
 // GET /api/v1/order/:id
-router.get('/:id', function(req, res) {
+router.get('/:id', checkTokenMiddleware, function(req, res) {
     axios.get(`${handlerOrder()}` + req.params.id).then(function(response){
         res.json(response.data);
         return response.data;
@@ -27,7 +28,7 @@ router.get('/:id', function(req, res) {
 });
 
 // GET /api/v1/order/client/:id
-router.get('/client/:id', function(req, res) {
+router.get('/client/:id', checkTokenMiddleware, function(req, res) {
     axios.get(`${handlerOrder()}` +`client/`+ req.params.id).then(function(response){
         res.json(response.data);
         return response.data;
@@ -38,7 +39,7 @@ router.get('/client/:id', function(req, res) {
 });
 
 // GET /api/v1/order/delivery/:id
-router.get('/delivery/:id', function(req, res) {
+router.get('/delivery/:id', checkTokenMiddleware, function(req, res) {
     axios.get(`${handlerOrder()}` +`delivery/`+ req.params.id).then(function(response){
         res.json(response.data);
         return response.data;
@@ -49,7 +50,7 @@ router.get('/delivery/:id', function(req, res) {
 });
 
 // GET /api/v1/order/restaurant/:id
-router.get('/restaurant/:id', async (req, res) => {
+router.get('/restaurant/:id', checkTokenMiddleware, async (req, res) => {
 
     try{
         const articleArray = [];
@@ -80,25 +81,40 @@ router.get('/restaurant/:id', async (req, res) => {
 });
 
 // POST /api/v1/order
-router.post('/', function(req, res) {
-    axios.post(`${handlerOrder()}`, req.body).then(function(response){
-        res.json(response.data);
-        return response.data;
-    }).catch(function(err){
-        console.log(err);
-        res.status(500).json({ message: 'Error. Internal server error' });
-    });
+router.post('/', checkTokenMiddleware, function(req, res) {
+    const tokenLoad = tokenReceiver(req);
+
+    if(tokenLoad.role === 'role_technique' || tokenLoad.role === 'role_restaurateur' || tokenLoad.role === 'role_commercial' || tokenLoad.role === 'role_client'){
+        req.socket.emit('order', req.body);
+        axios.post(`${handlerOrder()}`, req.body).then(function(response){
+            res.json(response.data);
+            return response.data;
+        }).catch(function(err){
+            console.log(err);
+            res.status(500).json({ message: 'Error. Internal server error' });
+        });
+    }else{
+        res.status(403).json({ message: 'Error. Forbidden' });
+    }
 });
 
 // PUT /api/v1/order
-router.put('/:id', function(req, res) {
-    axios.put(`${handlerOrder()}` + req.params.id, req.body).then(function(response){
-        res.json(response.data);
-        return response.data;
-    }).catch(function(err){
-        console.log(err);
-        res.status(500).json({ message: 'Error. Internal server error' });
-    });
+router.put('/:id', checkTokenMiddleware, function(req, res) {
+    const tokenLoad = tokenReceiver(req);
+
+    if(tokenLoad.role === 'role_technique' || tokenLoad.role === 'role_restaurateur' || tokenLoad.role === 'role_commercial' || tokenLoad.role === 'role_livreur' 
+    || tokenLoad.role === 'role_client'){
+        req.socket.emit('order', req.body);
+        axios.put(`${handlerOrder()}` + req.params.id, req.body).then(function(response){
+            res.json(response.data);
+            return response.data;
+        }).catch(function(err){
+            console.log(err);
+            res.status(500).json({ message: 'Error. Internal server error' });
+        });
+    }else{
+        res.status(403).json({ message: 'Error. Forbidden' });
+    }
 });
 
 module.exports = router;

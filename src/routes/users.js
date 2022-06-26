@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const axios = require('axios');
-const jwt = require('jsonwebtoken');
+const { checkTokenMiddleware } = require('../middleware/auth');
 const { encrypt } = require('../utils/aesEncryption');
 const handlerUser = require('../utils/handler.User');
 const { deleteUserArray } = require('./auth');
@@ -41,7 +41,7 @@ router.post('/', function(req, res) {
 });
 
 // PUT /api/v1/users/:id
-router.put('/:id', function(req, res) {
+router.put('/:id', checkTokenMiddleware, function(req, res) {
     const passwordEncrypt = encrypt(req.body.password,"YFpoGQ@$VrUMf64tZ9eg^RiaQSZ^Pw%*");
     req.body.password = passwordEncrypt;
 
@@ -55,7 +55,7 @@ router.put('/:id', function(req, res) {
 });
 
 // DELETE /api/v1/users/:id
-router.delete('/:id', function(req, res) {
+router.delete('/:id', checkTokenMiddleware, function(req, res) {
     deleteUserArray(req.params.id);
     
     axios.delete(`${handlerUser()}` + req.params.id).then(function(response){
