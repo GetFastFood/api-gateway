@@ -10,6 +10,8 @@ router.get('/download',function(req, res){
 });
 
 router.post('/mail', function(req, res){
+    const email = req.body.to;
+    console.log(email);
     const output = `,
     <h1>GETFAST EMAIL</h1>
     <h3>Message</h3>
@@ -30,7 +32,7 @@ router.post('/mail', function(req, res){
         // setup email data with unicode symbols
   let mailOptions = {
     from: '"Nodemailer Contact" <notifications@greenbee44.fr>', // sender address
-    to: req.body.to, // list of receivers
+    to: email, // list of receivers
     subject: 'Node Contact Request', // Subject line
     text: 'Hello world?', // plain text body
     html: output // html body
@@ -46,8 +48,6 @@ router.post('/mail', function(req, res){
 
     res.send(info);
     });
-
-
 });
 
 module.exports = router;

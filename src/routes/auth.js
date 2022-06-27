@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const { checkTokenMiddleware, extractBearerToken } = require('../middleware/auth');
 const { encrypt, decrypt } = require('../utils/aesEncryption');
 const handlerUser = require('../utils/handler.User');
+const handlerRestaurant = require('../utils/handler.Restaurant');
 const logs = require('../utils/logs.utils');
 
 const users  = [];
@@ -88,7 +89,17 @@ router.post("/register", async (req, res) => {
     const bodyJson = JSON.stringify(req.body);
     console.log(bodyJson);
     // Insertion dans le tableau des utilisateurs
-    axios.post(`${handlerUser()}`, req.body);
+    axios.post(`${handlerUser()}`, req.body).then((response) => {
+        axios.get(`${handlerUser()}`);
+        
+        if(req.body.role == "role_restaurateur"){
+            addRestaurateur(req);
+         }
+
+    }).catch((error) => {
+        console.log(error);
+    });
+
     return res.status(201).json({ message: `User ${req.body.email} created` });
 
   } catch (error) {
@@ -96,6 +107,15 @@ router.post("/register", async (req, res) => {
     res.status(400).send("An error occured");
   }
 });
+
+async function addRestaurateur(req){
+    const userResponse = await axios.get(`${handlerUser()}`);
+    const userJson = await userResponse.data;
+    const user = userJson.find((u) => u.email === req.body.email);
+    const json = {"owner" : user.ID, "status": "false"};
+
+    axios.post(`${handlerRestaurant()}`, json);
+}
 
 async function verificationDb(){
     const userPromise = axios.get(`${handlerUser()}`);
