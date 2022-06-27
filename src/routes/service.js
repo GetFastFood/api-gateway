@@ -9,7 +9,7 @@ router.get('/download',function(req, res){
     res.download(file); // Set disposition and send it.
 });
 
-router.post('/mail', checkTokenMiddleware, function(req, res){
+router.post('/mail', function(req, res){
     const output = `,
     <h1>GETFAST EMAIL</h1>
     <h3>Message</h3>
