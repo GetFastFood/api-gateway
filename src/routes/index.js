@@ -17,7 +17,7 @@ router.get('/restaurant/:id', async(req, res) => {
     
         const restaurantResponse = await restaurantPromise;
         const restaurantJson = await restaurantResponse.data;
-    
+
         for (let i = 0; i < restaurantResponse.data.menus.length; i++) {
             const menuId = restaurantResponse.data.menus[i]._id;
             const menuPromise = axios.get(`${handlerMenu()}` + menuId);
@@ -42,7 +42,6 @@ router.get('/restaurant/:id', async(req, res) => {
     }catch(err){
         console.log(err);
     }
-
 });
 
 // GET /api/v1/restaurant
@@ -58,14 +57,39 @@ router.get("/restaurant", function (req, res) {
     });
 });
 
-router.get('/restaurant/owner/:id', function(req, res) {
-    axios.get(`${handlerRestaurant()}` +`owner/`+ req.params.id).then(function(response){
-        res.json(response.data);
-        return response.data;
-    }).catch(function(err){
+router.get('/restaurant/owner/:id', async (req, res) => {
+    try{
+
+        const menuArray = [];
+        const articleArray = [];
+
+        const restaurantPromise = axios.get(`${handlerRestaurant()}` +`owner/`+ req.params.id);
+        const restaurantResponse = await restaurantPromise;
+        const restaurantJson = await restaurantResponse.data[0];
+
+        for (let i = 0; i < restaurantJson.menus.length; i++) {
+            const menuId = restaurantJson.menus[i]._id;
+            const menuPromise = axios.get(`${handlerMenu()}` + menuId);
+    
+            const menuResponse = await menuPromise;
+            const menuJson = await menuResponse.data;
+    
+            menuArray.push(menuJson);
+        };
+    
+        for(let i = 0; i < restaurantJson.article.length; i++){
+            const articleId = restaurantJson.article[i]._id;
+            const articlePromise = axios.get(`${handlerArticle()}` + articleId);
+            const articleResponse = await articlePromise;
+            const articleJson = await articleResponse.data;
+    
+            articleArray.push(articleJson);
+        };
+    
+        res.json({restaurant: restaurantJson, menu: menuArray, article: articleArray});
+    }catch(err){
         console.log(err);
-        res.status(500).json({ message: 'Error. Internal server error' });
-    });
+    }
 });
 
 // POST /api/v1/restaurant
