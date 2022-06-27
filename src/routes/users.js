@@ -32,6 +32,7 @@ router.post('/', function(req, res) {
     const passwordEncrypt = encrypt(req.body.password,"YFpoGQ@$VrUMf64tZ9eg^RiaQSZ^Pw%*");
     req.body.password = passwordEncrypt;
     axios.post(`${handlerUser()}`, req.body).then(function(response){
+        res.set('Access-Control-Allow-Origin', '*');
         res.json(response.data);
         return response.data;
     }).catch(function(err){
