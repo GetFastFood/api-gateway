@@ -41,7 +41,7 @@ router.get('/restaurant/:id', function(req, res) {
 // POST /api/v1/article
 router.post('/', checkTokenMiddleware, function(req, res) {
 
-    const tokenLoad = extractBearerToken(req);
+    const tokenLoad = tokenReceiver(req);
 
     if(tokenLoad.role === 'role_technique' || tokenLoad.role === 'role_restaurateur' || tokenLoad.role === 'role_commercial'){
         axios.post(`${handlerArticle()}`, req.body).then(function(response){
@@ -80,7 +80,8 @@ async function updateRestaurant(id, articleId){
 
 // PUT /api/v1/article
 router.put('/:id', checkTokenMiddleware, function(req, res) {
-    const tokenLoad = extractBearerToken(req);
+
+    const tokenLoad = tokenReceiver(req);
 
     if(tokenLoad.role === 'role_technique' || tokenLoad.role === 'role_restaurateur' || tokenLoad.role === 'role_commercial'){
         axios.put(`${handlerArticle()}` + req.params.id, req.body).then(function(response){
@@ -97,6 +98,7 @@ router.put('/:id', checkTokenMiddleware, function(req, res) {
 
 // DELETE /api/v1/article/:id
 router.delete('/:id', checkTokenMiddleware, function(req, res) {
+    
     const tokenLoad = tokenReceiver(req);
 
     if(tokenLoad.role === 'role_technique' || tokenLoad.role === 'role_restaurateur' || tokenLoad.role === 'role_commercial'){
