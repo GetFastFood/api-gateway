@@ -32,7 +32,6 @@ router.post('/', function(req, res) {
     const passwordEncrypt = encrypt(req.body.password,"YFpoGQ@$VrUMf64tZ9eg^RiaQSZ^Pw%*");
     req.body.password = passwordEncrypt;
     axios.post(`${handlerUser()}`, req.body).then(function(response){
-        res.set('Access-Control-Allow-Origin', '*');
         res.json(response.data);
         return response.data;
     }).catch(function(err){
@@ -42,11 +41,12 @@ router.post('/', function(req, res) {
 });
 
 // PUT /api/v1/users/:id
-router.put('/:id', checkTokenMiddleware, function(req, res) {
+router.put('/:id', function(req, res) {
     const passwordEncrypt = encrypt(req.body.password,"YFpoGQ@$VrUMf64tZ9eg^RiaQSZ^Pw%*");
     req.body.password = passwordEncrypt;
 
     axios.put(`${handlerUser()}` + req.params.id, req.body).then(function(response){
+        res.set('Access-Control-Allow-Origin', '*');
         res.json(response.data);
         return response.data;
     }).catch(function(err){
