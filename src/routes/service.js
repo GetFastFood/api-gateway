@@ -3,16 +3,10 @@ const nodemailer = require('nodemailer');
 const tokenReceiver = require('../utils/tokenReceiver');
 const { checkTokenMiddleware } = require('../middleware/auth');
 
-
 // GET /api/v1/service/download
-router.get('/download', checkTokenMiddleware, function(req, res){
-  const tokenLoad = tokenReceiver(req);
-  if(tokenLoad.role === 'role_technique' || tokenLoad.role === 'role_commercial'){
+router.get('/download',function(req, res){
     const file = `./logs/server.log`;
     res.download(file); // Set disposition and send it.
-  }else{
-    res.status(403).json({ message: 'Error. Forbidden' });
-  }
 });
 
 router.post('/mail', checkTokenMiddleware, function(req, res){
