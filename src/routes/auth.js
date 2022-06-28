@@ -112,7 +112,8 @@ async function addRestaurateur(req){
     const userResponse = await axios.get(`${handlerUser()}`);
     const userJson = await userResponse.data;
     const user = userJson.find((u) => u.email === req.body.email);
-    const json = {"owner" : user.ID, "status": "false"};
+    const json = {"owner" : user.ID, "status": "false", "name": "Nom de votre restaurant", "image": "URL de votre image",
+    "opening": "00:00", "closing": "00:00", "address": "Adresse de votre restaurant"};
 
     axios.post(`${handlerRestaurant()}`, json);
 }
