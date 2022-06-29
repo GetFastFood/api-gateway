@@ -2,6 +2,7 @@ require('dotenv').config();
 
 const socketIo = require('socket.io');
 const http = require('http');
+const cors = require('cors');
 
 var express = require('express');
 var path = require('path');
@@ -36,6 +37,11 @@ app.listen(process.env.PORT, () => console.log('Server app listening on port ' +
 
 const server = http.createServer(app);
 const io = socketIo(server);
+
+app.use(cors({
+    origin: '*',
+    methods: ['GET','POST','DELETE','UPDATE','PUT','PATCH']
+  }));
 
 io.on('connection',(socket)=>{
   console.log('client connected: ', socket.id)
