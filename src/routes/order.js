@@ -4,7 +4,7 @@ const handlerArticle = require('../utils/handler.Article');
 const handlerOrder = require('../utils/handler.Order');
 const { checkTokenMiddleware } = require('../middleware/auth');
 const tokenReceiver = require('../utils/tokenReceiver');
-
+  
 // GET /api/v1/order
 router.get('/', checkTokenMiddleware, function(req, res) {
     axios.get(`${handlerOrder()}`).then(function(response){
@@ -85,7 +85,6 @@ router.post('/', checkTokenMiddleware, function(req, res) {
     const tokenLoad = tokenReceiver(req);
 
     if(tokenLoad.role === 'role_technique' || tokenLoad.role === 'role_restaurateur' || tokenLoad.role === 'role_commercial' || tokenLoad.role === 'role_client'){
-        req.socket.emit('order', req.body);
         axios.post(`${handlerOrder()}`, req.body).then(function(response){
             res.json(response.data);
             return response.data;

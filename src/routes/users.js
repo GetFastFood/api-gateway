@@ -69,4 +69,16 @@ router.delete('/:id', checkTokenMiddleware, function(req, res) {
 
 });
 
+router.get('/email/:email', function(req, res) {
+
+    axiox.get(`${handlerUser()}`+`email/` + req.params.email).then(function(response){
+        res.json(response.data);
+        return response.data;
+    }  ).catch(function(err){
+        console.log(err);
+        res.status(500).json({ message: 'Error. Internal server error' });
+    });
+
+});
+
 module.exports = router;
