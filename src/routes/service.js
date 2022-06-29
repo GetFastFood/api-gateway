@@ -1176,7 +1176,7 @@ transporter.sendMail(mailOptions, (error, info) => {
 
 router.post('/testnotif', function(req, res) {
     console.log(req.body);
-    io.to('clock-room').emit('order', new Date());
+    req.io.to('clock-room').emit('order', new Date());
     res.send('ok');
   });
 
