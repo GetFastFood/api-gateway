@@ -71,7 +71,7 @@ router.delete('/:id', checkTokenMiddleware, function(req, res) {
 
 router.get('/email/:email', function(req, res) {
 
-    axiox.get(`${handlerUser()}`+`email/` + req.params.email).then(function(response){
+    axios.get(`${handlerUser()}`+`email/` + req.params.email).then(function(response){
         res.json(response.data);
         return response.data;
     }  ).catch(function(err){
