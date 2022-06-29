@@ -33,22 +33,30 @@ app.use(`${process.env.API_ORDER}`, orderRouter);
 app.use(`${process.env.API_USERS}`, usersRouter);
 app.use(`${process.env.API_SERVICE}`, serviceRouter);
 
-app.listen(process.env.PORT, () => console.log('Server app listening on port ' + process.env.PORT));
+//app.listen(process.env.PORT, () => console.log('Server app listening on port ' + process.env.PORT));
 
-const server = require('http').Server(app)
-const io = socketIo(server);
-
-app.use(cors({
-    origin: '*',
-    methods: ['GET','POST','DELETE','UPDATE','PUT','PATCH']
-  }));
-
+const server = http.createServer(app)
+const io = socketIo(server,{ 
+    cors: {
+      origin: '*',
+      methods: ['GET','POST','DELETE','UPDATE','PUT','PATCH']
+    }
+}) //in case server and client run on different urls
 io.on('connection',(socket)=>{
-  console.log('client connected: ', socket.id)
-    
+  console.log('client connected: ',socket.id)
+  
+  socket.join('clock-room')
+  
   socket.on('disconnect',(reason)=>{
-    console.log('client disconnected: ', socket.id)
+    console.log(reason)
   })
+})
+setInterval(()=>{
+     io.to('clock-room').emit('time', new Date())
+},1000)
+server.listen(process.env.PORT, err=> {
+  if(err) console.log(err)
+  console.log('Server running on Port', process.env.PORT)
 })
 
 setInterval(()=>{ io.to('clock-room').emit('time', new Date())
