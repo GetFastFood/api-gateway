@@ -35,7 +35,7 @@ app.use(`${process.env.API_SERVICE}`, serviceRouter);
 
 app.listen(process.env.PORT, () => console.log('Server app listening on port ' + process.env.PORT));
 
-const server = http.createServer(app);
+const server = require('http').Server(app)
 const io = socketIo(server);
 
 app.use(cors({
