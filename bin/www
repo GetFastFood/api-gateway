@@ -48,6 +48,14 @@ function notifications(req){
 
 app.notifications = notifications;
 
+function notificationsUpdate(json){
+  console.log('notifications');
+  console.log(json);
+  io.to('clock-room').emit('order', json);
+}
+
+app.notificationsUpdate = notificationsUpdate;
+
 /**
  * Listen on provided port, on all network interfaces.
  */

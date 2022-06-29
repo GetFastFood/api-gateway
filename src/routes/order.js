@@ -98,12 +98,11 @@ router.post('/', checkTokenMiddleware, function(req, res) {
 });
 
 // PUT /api/v1/order
-router.put('/:id', checkTokenMiddleware, function(req, res) {
+router.put('/:id', checkTokenMiddleware, async(req, res) =>{
     const tokenLoad = tokenReceiver(req);
 
     if(tokenLoad.role === 'role_technique' || tokenLoad.role === 'role_restaurateur' || tokenLoad.role === 'role_commercial' || tokenLoad.role === 'role_livreur' 
     || tokenLoad.role === 'role_client'){
-        req.app.notifications(req);
         axios.put(`${handlerOrder()}` + req.params.id, req.body).then(function(response){
             res.json(response.data);
             return response.data;
@@ -111,6 +110,13 @@ router.put('/:id', checkTokenMiddleware, function(req, res) {
             console.log(err);
             res.status(500).json({ message: 'Error. Internal server error' });
         });
+
+        const orderPromise = axios.get(`${handlerOrder()}` + req.params.id);
+        const orderResponse = await orderPromise;
+        const orderJson = await orderResponse.data;
+
+        req.app.notificationsUpdate(orderJson);
+
     }else{
         res.status(403).json({ message: 'Error. Forbidden' });
     }
