@@ -1175,7 +1175,9 @@ transporter.sendMail(mailOptions, (error, info) => {
 });
 
 router.post('/testnotif', function(req, res) {
+    console.log(req.body);
     req.socket.emit('order', req.body);
+    res.send('ok');
   });
 
 module.exports = router;
