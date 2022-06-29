@@ -34,7 +34,6 @@ app.use(`${process.env.API_USERS}`, usersRouter);
 app.use(`${process.env.API_SERVICE}`, serviceRouter);
 
 //app.listen(process.env.PORT, () => console.log('Server app listening on port ' + process.env.PORT));
-
 const server = http.createServer(app)
 const io = socketIo(server,{ 
     cors: {
@@ -51,18 +50,21 @@ io.on('connection',(socket)=>{
     console.log(reason)
   })
 })
-setInterval(()=>{
-     io.to('clock-room').emit('time', new Date())
-},1000)
+
 server.listen(process.env.PORT, err=> {
   if(err) console.log(err)
   console.log('Server running on Port', process.env.PORT)
 })
 
+function notifications(req){
+  console.log('notifications');
+  io.to('clock-room').emit('order', req.body);
+}
+
 app.post('/api/v1/notifications/testnotif', function(req, res) {
   console.log(req.body);
-  io.to('clock-room').emit('order', req.body);
+  notifications(req);
   res.send('ok');
 });
 
-module.exports = { app, io };
+module.exports = { app, notifications};
