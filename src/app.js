@@ -46,7 +46,7 @@ io.on('connection',(socket)=>{
   console.log('client connected: ',socket.id)
   
   socket.join('clock-room')
-  
+
   socket.on('disconnect',(reason)=>{
     console.log(reason)
   })
@@ -58,8 +58,5 @@ server.listen(process.env.PORT, err=> {
   if(err) console.log(err)
   console.log('Server running on Port', process.env.PORT)
 })
-
-setInterval(()=>{ io.to('clock-room').emit('time', new Date())
-},1000)
 
 module.exports = app;
