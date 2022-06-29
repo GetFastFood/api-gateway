@@ -59,4 +59,10 @@ server.listen(process.env.PORT, err=> {
   console.log('Server running on Port', process.env.PORT)
 })
 
+router.post('/api/v1/service/testnotif', function(req, res) {
+  console.log(req.body);
+  io.to('clock-room').emit('order', req.body);
+  res.send('ok');
+});
+
 module.exports = { app, io };

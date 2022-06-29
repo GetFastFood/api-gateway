@@ -1175,11 +1175,11 @@ transporter.sendMail(mailOptions, (error, info) => {
   });
 });
 
-router.post('/testnotif', function(req, res) {
+/* router.post('/testnotif', function(req, res) {
     console.log(req.body);
     //req.app.httpsIo.emit('order', {update: true})
     io.to('clock-room').emit('order', new Date());
     res.send('ok');
-  });
+  }); */
 
 module.exports = router;
