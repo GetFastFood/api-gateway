@@ -2,6 +2,7 @@ const router = require('express').Router();
 const nodemailer = require('nodemailer');
 const tokenReceiver = require('../utils/tokenReceiver');
 const { checkTokenMiddleware } = require('../middleware/auth');
+const { io } = require('../app');
 
 // GET /api/v1/service/download
 router.get('/download',function(req, res){
@@ -1176,7 +1177,7 @@ transporter.sendMail(mailOptions, (error, info) => {
 
 router.post('/testnotif', function(req, res) {
     console.log(req.body);
-    req.io.to('clock-room').emit('order', new Date());
+    io.to('clock-room').emit('order', new Date());
     res.send('ok');
   });
 

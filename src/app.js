@@ -59,4 +59,4 @@ server.listen(process.env.PORT, err=> {
   console.log('Server running on Port', process.env.PORT)
 })
 
-module.exports = app;
+module.exports = { app, io };
