@@ -2,7 +2,7 @@ const router = require('express').Router();
 const nodemailer = require('nodemailer');
 const tokenReceiver = require('../utils/tokenReceiver');
 const { checkTokenMiddleware } = require('../middleware/auth');
-const { io } = require('../app');
+const { io } = require('socket.io-client');
 
 // GET /api/v1/service/download
 router.get('/download',function(req, res){
