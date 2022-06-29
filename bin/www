@@ -42,6 +42,7 @@ app.io = io;
 
 function notifications(req){
   console.log('notifications');
+  console.log(req);
   io.to('clock-room').emit('order', req.body);
 }
 

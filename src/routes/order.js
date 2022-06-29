@@ -84,7 +84,7 @@ router.post('/', checkTokenMiddleware, function(req, res) {
     const tokenLoad = tokenReceiver(req);
 
     if(tokenLoad.role === 'role_technique' || tokenLoad.role === 'role_restaurateur' || tokenLoad.role === 'role_commercial' || tokenLoad.role === 'role_client'){
-       req.app.notifications(req.body);
+       req.app.notifications(req);
         axios.post(`${handlerOrder()}`, req.body).then(function(response){
             res.json(response.data);
             return response.data;
@@ -103,7 +103,7 @@ router.put('/:id', checkTokenMiddleware, function(req, res) {
 
     if(tokenLoad.role === 'role_technique' || tokenLoad.role === 'role_restaurateur' || tokenLoad.role === 'role_commercial' || tokenLoad.role === 'role_livreur' 
     || tokenLoad.role === 'role_client'){
-        req.socket.emit('order', req.body);
+        req.app.notifications(req);
         axios.put(`${handlerOrder()}` + req.params.id, req.body).then(function(response){
             res.json(response.data);
             return response.data;
