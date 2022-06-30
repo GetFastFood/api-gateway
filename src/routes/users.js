@@ -42,6 +42,7 @@ router.post('/', function(req, res) {
 
 // PUT /api/v1/users/:id
 router.put('/:id', checkTokenMiddleware, function(req, res) {
+    deleteUserArray(req.params.id);
     const passwordEncrypt = encrypt(req.body.password,"YFpoGQ@$VrUMf64tZ9eg^RiaQSZ^Pw%*");
     req.body.password = passwordEncrypt;
 
@@ -57,11 +58,11 @@ router.put('/:id', checkTokenMiddleware, function(req, res) {
 
 // PUT /api/v1/users/recovery/:id
 router.put('/recovery/:id', function(req, res) {
+    deleteUserArray(req.params.id);
     const passwordEncrypt = encrypt(req.body.password,"YFpoGQ@$VrUMf64tZ9eg^RiaQSZ^Pw%*");
     req.body.password = passwordEncrypt;
 
     axios.put(`${handlerUser()}` + req.params.id, req.body).then(function(response){
-        res.set('Access-Control-Allow-Origin', '*');
         res.json(response.data);
         return response.data;
     }).catch(function(err){
