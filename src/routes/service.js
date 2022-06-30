@@ -487,7 +487,7 @@ router.post('/parainage', function(req, res){
                                                     color: #ff7000;
                                                     background-color: #ffffff;
                                                   "
-                                                  >50%</span
+                                                  >25%</span
                                                 >
                                                 de réduction</span
                                               ></span
@@ -540,7 +540,7 @@ router.post('/parainage', function(req, res){
                                                   color: #ff7000;
                                                   background-color: #ffffff;
                                                 "
-                                                ><strong>MD2021</strong></span
+                                                ><strong>CODE1</strong></span
                                               ></span
                                             >
                                           </p>
