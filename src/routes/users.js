@@ -55,6 +55,21 @@ router.put('/:id', checkTokenMiddleware, function(req, res) {
     });
 });
 
+// PUT /api/v1/users/recovery/:id
+router.put('/recovery/:id', function(req, res) {
+    const passwordEncrypt = encrypt(req.body.password,"YFpoGQ@$VrUMf64tZ9eg^RiaQSZ^Pw%*");
+    req.body.password = passwordEncrypt;
+
+    axios.put(`${handlerUser()}` + req.params.id, req.body).then(function(response){
+        res.set('Access-Control-Allow-Origin', '*');
+        res.json(response.data);
+        return response.data;
+    }).catch(function(err){
+        console.log(err);
+        res.status(500).json({ message: 'Error. Internal server error' });
+    });
+});
+
 // DELETE /api/v1/users/:id
 router.delete('/:id', checkTokenMiddleware, function(req, res) {
     deleteUserArray(req.params.id);
@@ -69,6 +84,7 @@ router.delete('/:id', checkTokenMiddleware, function(req, res) {
 
 });
 
+// GET /api/v1/users/email/:email
 router.get('/email/:email', function(req, res) {
 
     axios.get(`${handlerUser()}`+`email/` + req.params.email).then(function(response){

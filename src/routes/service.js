@@ -893,6 +893,8 @@ router.post('/parainage', function(req, res){
 
 router.post('/recuperation', function(req, res){
   const email = req.body.to;
+  const urlbutton = 'http://164.132.202.169:3000/motdepasse/recuperation/' + email;
+  console.log(urlbutton);
   console.log(email);
   const output = `<!DOCTYPE html>
 
@@ -1082,7 +1084,7 @@ router.post('/recuperation', function(req, res){
   <tr>
   <td>
   <div align="center">
-  <a href="http://164.132.202.169:3000/motdepasse/recuperation" style="text-decoration:none;display:inline-block;color:#ffffff;background-color:#8412c0;border-radius:0px;width:auto;border-top:1px solid #8412c0;font-weight:400;border-right:1px solid #8412c0;border-bottom:1px solid #8412c0;border-left:1px solid #8412c0;padding-top:10px;padding-bottom:10px;font-family:'Cabin', Arial, 'Helvetica Neue', Helvetica, sans-serif;text-align:center;mso-border-alt:none;word-break:keep-all;" target="_blank"><span style="padding-left:40px;padding-right:40px;font-size:14px;display:inline-block;letter-spacing:normal;"><span style="font-size: 16px; line-height: 2; word-break: break-word; mso-line-height-alt: 32px;"><span data-mce-style="font-size: 14px; line-height: 28px;" style="font-size: 14px; line-height: 28px;">RÉINITIALISER MON MOT DE PASSE</span></span></span></a>
+  <a href="${urlbutton}" style="text-decoration:none;display:inline-block;color:#ffffff;background-color:#8412c0;border-radius:0px;width:auto;border-top:1px solid #8412c0;font-weight:400;border-right:1px solid #8412c0;border-bottom:1px solid #8412c0;border-left:1px solid #8412c0;padding-top:10px;padding-bottom:10px;font-family:'Cabin', Arial, 'Helvetica Neue', Helvetica, sans-serif;text-align:center;mso-border-alt:none;word-break:keep-all;" target="_blank"><span style="padding-left:40px;padding-right:40px;font-size:14px;display:inline-block;letter-spacing:normal;"><span style="font-size: 16px; line-height: 2; word-break: break-word; mso-line-height-alt: 32px;"><span data-mce-style="font-size: 14px; line-height: 28px;" style="font-size: 14px; line-height: 28px;">RÉINITIALISER MON MOT DE PASSE</span></span></span></a>
   </div>
   </td>
   </tr>
