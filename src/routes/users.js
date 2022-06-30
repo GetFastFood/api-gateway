@@ -47,7 +47,6 @@ router.put('/:id', checkTokenMiddleware, function(req, res) {
     req.body.password = passwordEncrypt;
 
     axios.put(`${handlerUser()}` + req.params.id, req.body).then(function(response){
-        res.set('Access-Control-Allow-Origin', '*');
         res.json(response.data);
         return response.data;
     }).catch(function(err){
