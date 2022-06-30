@@ -115,6 +115,12 @@ router.put('/:id', checkTokenMiddleware, async(req, res) =>{
         const orderResponse = await orderPromise;
         const orderJson = await orderResponse.data;
 
+        if(orderJson.delivery == null){
+            orderJson.delivery = req.body.delivery;
+        }
+
+        orderJson.status = req.body.status;
+
         req.app.notificationsUpdate(orderJson);
 
     }else{
