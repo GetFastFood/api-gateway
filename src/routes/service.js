@@ -401,7 +401,7 @@ router.post('/parainage', function(req, res){
                                           margin-bottom: 0;
                                         "
                                       >
-                                        On souhaite vous parrainer !
+                                        On vous souhaite vous parrainer !
                                       </h1>
                                     </td>
                                   </tr>
@@ -487,7 +487,7 @@ router.post('/parainage', function(req, res){
                                                     color: #ff7000;
                                                     background-color: #ffffff;
                                                   "
-                                                  >50%</span
+                                                  >25%</span
                                                 >
                                                 de réduction</span
                                               ></span
@@ -540,7 +540,7 @@ router.post('/parainage', function(req, res){
                                                   color: #ff7000;
                                                   background-color: #ffffff;
                                                 "
-                                                ><strong>MD2021</strong></span
+                                                ><strong>CODE1</strong></span
                                               ></span
                                             >
                                           </p>
@@ -874,7 +874,7 @@ router.post('/parainage', function(req, res){
   let mailOptions = {
     from: '"GetFast Notifications" <notifications@greenbee44.fr>', // sender address
     to: email, // list of receivers
-    subject: 'On shouhaite vous parrainer sur GetFast ! ', // Subject line
+    subject: 'On vous souhaite vous parrainer sur GetFast ! ', // Subject line
     text: 'Hello world?', // plain text body
     html: output // html body
     };
