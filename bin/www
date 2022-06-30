@@ -1,0 +1,128 @@
+#!/usr/bin/env node
+
+/**
+ * Module dependencies.
+ */
+
+var app = require('../src/app');
+var debug = require('debug')('api-gateway:server');
+var http = require('http');
+const socketIo = require('socket.io');
+
+/**
+ * Get port from environment and store in Express.
+ */
+
+var port = normalizePort(process.env.PORT || '3000');
+app.set('port', port);
+
+/**
+ * Create HTTP server.
+ */
+
+const server = http.createServer(app)
+const io = socketIo(server,{ 
+    cors: {
+      origin: '*',
+      methods: ['GET','POST','DELETE','UPDATE','PUT','PATCH']
+    }
+}) //in case server and client run on different urls
+
+io.on('connection',(socket)=>{
+  console.log('client connected: ', socket.id)
+  
+  socket.join('clock-room')
+
+  socket.on('disconnect',(reason)=>{
+    console.log(reason)
+  })
+});
+
+app.io = io;
+
+function notifications(req){
+  console.log('notifications');
+  console.log(req.body);
+  io.to('clock-room').emit('order', req.body);
+}
+
+app.notifications = notifications;
+
+function notificationsUpdate(json){
+  console.log('notifications');
+  console.log(json);
+  io.to('clock-room').emit('order', json);
+}
+
+app.notificationsUpdate = notificationsUpdate;
+
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+
+server.listen(process.env.PORT, err=> {
+  if(err) console.log(err)
+  console.log('Server running on Port', process.env.PORT)
+})
+server.on('error', onError);
+server.on('listening', onListening);
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
+
+function normalizePort(val) {
+  var port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
+
+  if (port >= 0) {
+    // port number
+    return port;
+  }
+
+  return false;
+}
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+function onError(error) {
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
+
+  var bind = typeof port === 'string'
+    ? 'Pipe ' + port
+    : 'Port ' + port;
+
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges');
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      console.error(bind + ' is already in use');
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+function onListening() {
+  var addr = server.address();
+  var bind = typeof addr === 'string'
+    ? 'pipe ' + addr
+    : 'port ' + addr.port;
+  debug('Listening on ' + bind);
+}
